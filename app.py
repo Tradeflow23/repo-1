@@ -20,7 +20,8 @@ with col2:
 
 # --- CALCULATIONS ---
 if monthly_sales > 0 and monthly_cogs > 0:
-
+else:
+    st.warning(...)
     daily_sales = monthly_sales / 30
     daily_cogs = monthly_cogs / 30
 
@@ -81,3 +82,66 @@ if monthly_sales > 0 and monthly_cogs > 0:
 
 else:
     st.warning("Please enter Monthly Sales and Monthly COGS to calculate results.")
+    st.markdown("---")
+    st.subheader("🚀 Cash Improvement Simulator")
+
+    st.markdown("Adjust operational days to see how much cash can be freed.")
+
+    sim_col1, sim_col2, sim_col3 = st.columns(3)
+
+    with sim_col1:
+        reduce_inventory_days = st.slider(
+            "Reduce Inventory Days",
+            0,
+            int(inventory_days),
+            0
+        )
+
+    with sim_col2:
+        reduce_receivable_days = st.slider(
+            "Reduce Receivable Days",
+            0,
+            int(receivable_days),
+            0
+        )
+
+    with sim_col3:
+        increase_payable_days = st.slider(
+            "Increase Payable Days",
+            0,
+            60,
+            0
+        )
+
+    # --- Simulation Calculations ---
+    new_inventory_days = inventory_days - reduce_inventory_days
+    new_receivable_days = receivable_days - reduce_receivable_days
+    new_payable_days = payable_days + increase_payable_days
+
+    new_inventory_value = new_inventory_days * daily_cogs
+    new_receivables = new_receivable_days * daily_sales
+    new_payables = new_payable_days * daily_cogs
+
+    new_working_capital = new_inventory_value + new_receivables - new_payables
+    new_ccc = new_inventory_days + new_receivable_days - new_payable_days
+
+    cash_freed = working_capital - new_working_capital
+
+    st.markdown("---")
+    st.subheader("📊 Simulation Results")
+
+    col_sim1, col_sim2 = st.columns(2)
+
+    with col_sim1:
+        st.metric("New Working Capital (₹)", f"{new_working_capital:,.2f}")
+        st.metric("New Cash Conversion Cycle (Days)", f"{new_ccc:.2f}")
+
+    with col_sim2:
+        st.metric("Cash Freed (₹)", f"{cash_freed:,.2f}")
+
+    if cash_freed > 0:
+        st.success("Improvement achieved! Liquidity position strengthened.")
+    elif cash_freed < 0:
+        st.warning("Working capital has increased under this scenario.")
+    else:
+        st.info("No change in working capital.")
