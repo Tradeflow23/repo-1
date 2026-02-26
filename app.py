@@ -18,10 +18,9 @@ with col2:
     receivables = st.number_input("Receivables (₹)", min_value=0.0, step=1000.0)
     payables = st.number_input("Payables (₹)", min_value=0.0, step=1000.0)
 
-# --- CALCULATIONS ---
+# --- MAIN LOGIC ---
 if monthly_sales > 0 and monthly_cogs > 0:
-else:
-    st.warning(...)
+
     daily_sales = monthly_sales / 30
     daily_cogs = monthly_cogs / 30
 
@@ -61,7 +60,6 @@ else:
         st.metric("Working Capital % of Sales", f"{wc_percent:.2f}%")
 
     st.markdown("---")
-
     st.subheader("📊 Additional Metrics")
 
     st.write(f"Operating Cycle: {operating_cycle:.2f} days")
@@ -69,7 +67,6 @@ else:
     st.write(f"Risk Assessment: {risk_level}")
 
     st.markdown("---")
-
     st.subheader("📘 What These Terms Mean")
 
     st.markdown("""
@@ -80,8 +77,7 @@ else:
     - **Operating Cycle:** Time taken to convert inventory into cash (Inventory Days + Receivable Days).
     """)
 
-else:
-    st.warning("Please enter Monthly Sales and Monthly COGS to calculate results.")
+    # --- SIMULATOR ---
     st.markdown("---")
     st.subheader("🚀 Cash Improvement Simulator")
 
@@ -90,30 +86,14 @@ else:
     sim_col1, sim_col2, sim_col3 = st.columns(3)
 
     with sim_col1:
-        reduce_inventory_days = st.slider(
-            "Reduce Inventory Days",
-            0,
-            int(inventory_days),
-            0
-        )
+        reduce_inventory_days = st.slider("Reduce Inventory Days", 0, int(inventory_days), 0)
 
     with sim_col2:
-        reduce_receivable_days = st.slider(
-            "Reduce Receivable Days",
-            0,
-            int(receivable_days),
-            0
-        )
+        reduce_receivable_days = st.slider("Reduce Receivable Days", 0, int(receivable_days), 0)
 
     with sim_col3:
-        increase_payable_days = st.slider(
-            "Increase Payable Days",
-            0,
-            60,
-            0
-        )
+        increase_payable_days = st.slider("Increase Payable Days", 0, 60, 0)
 
-    # --- Simulation Calculations ---
     new_inventory_days = inventory_days - reduce_inventory_days
     new_receivable_days = receivable_days - reduce_receivable_days
     new_payable_days = payable_days + increase_payable_days
@@ -145,3 +125,6 @@ else:
         st.warning("Working capital has increased under this scenario.")
     else:
         st.info("No change in working capital.")
+
+else:
+    st.warning("Please enter Monthly Sales and Monthly COGS to calculate results.")
