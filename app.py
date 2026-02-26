@@ -6,10 +6,12 @@ st.title("📊 Working Capital Intelligence Dashboard")
 
 st.markdown("Enter your financial details below:")
 
+# --- BUSINESS TYPE SELECTOR ---
 business_type = st.selectbox(
     "Select Business Type",
     ["FMCG Distributor", "Manufacturing"]
 )
+
 # --- INPUT SECTION ---
 col1, col2 = st.columns(2)
 
@@ -38,20 +40,22 @@ if monthly_sales > 0 and monthly_cogs > 0:
     wc_percent = (working_capital / monthly_sales) * 100 if monthly_sales > 0 else 0
     capital_efficiency = monthly_sales / working_capital if working_capital > 0 else 0
 
-   # Dynamic Risk Classification
-if business_type == "FMCG Distributor":
-    healthy_limit = 45
-    moderate_limit = 75
-else:  # Manufacturing
-    healthy_limit = 60
-    moderate_limit = 100
+    # --- DYNAMIC RISK CLASSIFICATION ---
+    if business_type == "FMCG Distributor":
+        healthy_limit = 45
+        moderate_limit = 75
+    else:  # Manufacturing
+        healthy_limit = 60
+        moderate_limit = 100
 
-if ccc < healthy_limit:
-    risk_level = "🟢 Healthy Liquidity Position"
-elif ccc < moderate_limit:
-    risk_level = "🟠 Moderate Liquidity Risk"
-else:
-    risk_level = "🔴 High Liquidity Risk"
+    if ccc < healthy_limit:
+        risk_level = "🟢 Healthy Liquidity Position"
+    elif ccc < moderate_limit:
+        risk_level = "🟠 Moderate Liquidity Risk"
+    else:
+        risk_level = "🔴 High Liquidity Risk"
+
+    # --- RESULTS ---
     st.markdown("---")
     st.subheader("📈 Results")
 
